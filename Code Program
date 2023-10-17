@@ -1,0 +1,182 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct mhsiswa{
+	char nama[50];
+	char nim[11];
+	int asg;
+	int mid;
+	int fin;
+
+}mh[100];
+int jumlah = 0;
+int s;
+int temp;
+
+void addfile(){
+	//function addfile:
+	//menambahkan nim, nama, asg, mid, fin
+	// ke dalam file "student.txt"
+	FILE *fp = fopen ("student.txt", "w");
+	for (int i = 0; i < jumlah; i++){
+		fprintf (fp, "%s#%s#%d#%d#%d\n", mh[i].nim, mh[i].nama, mh[i].asg, mh[i].mid, mh[i].fin);
+	}
+	fclose(fp);
+}
+
+void addstudentinfo(){
+	// function addstudentinfo:
+	// menambahkan NIM dan nama mahasiswa
+   system("cls");
+    
+	printf("add new student file\n");
+	printf("Nama\t: ");
+	scanf("%[^\n]", mh[jumlah].nama);
+	getchar(); 
+
+	printf("NIM: ");
+	scanf("%[^\n]", mh[jumlah].nim);
+	getchar(); 
+
+	mh[jumlah].asg = -1;
+	mh[jumlah].mid = -1;
+	mh[jumlah].fin = -1;
+	jumlah++;
+}
+
+
+void swap(int i, int j){
+	// function swap:
+	// untuk sorting, tukar data
+    struct mhsiswa temp = mh[i];
+    mh[i] = mh[j];
+    mh[j] = temp;
+}
+
+void sorting(){
+    // function sorting;
+	// untuk mensorting setiap asg, mid ,fin
+    if(s == 1){
+        
+        for (int i = 0; i < jumlah-1; i++){
+			for (int j = 0; j < jumlah-i-1; j++){
+				 if (mh[j].asg > mh[j+1].asg){// tuker data 
+					 swap(j, j+1);
+				}
+			} 
+		}      
+    }
+  
+    if(s == 2){
+        
+        for (int i = 0; i < jumlah-1; i++){
+			for (int j = 0; j < jumlah-i-1; j++){
+				 if (mh[j].mid > mh[j+1].mid){
+					 swap(j, j+1);
+				}
+			}
+		}      
+    }
+    
+    if(s == 3){
+        for (int i = 0; i < jumlah-1; i++){
+			for (int j = 0; j < jumlah-i-1; j++){
+				if (mh[j].fin > mh[j+1].fin){
+					swap(j, j+1);
+				}
+			}
+		}      
+    }
+}
+
+
+void showdata(){
+	// function showdata;
+	// untuk mengeluarkan semua data dalam bentuk tabel
+	puts("Sort by (ascending)");
+  	puts("1. ASG");
+  	puts("2. MID");
+  	puts("3. FIN");
+	scanf ("%d", &s);
+	
+	system("cls");
+	// print bentuk tabel
+	printf("==================================\n");
+	printf("|NO|Nim         |Name| asg  | mid  | fin  |\n");
+	for (int i = 0; i< jumlah; i++){
+		printf("|%d| %s | %s |  %d  |  %d  |  %d  |\n", i + 1, mh[i].nim, mh[i].nama, mh[i].asg, mh[i].mid, mh[i].fin);
+	}
+	
+	printf("==================================\n");
+  
+}
+
+void bacafile(){
+	// membaca file dari "stucent,txt" yang berikut nya akan di print
+	int i= 0;
+	FILE *fp = fopen ("student.txt", "r");
+	 while (!feof (fp)){
+		fscanf (fp, "%[^#]#%[^#]#%d#%d#%d\n", mh[i].nim, mh[i].nama, &mh[i].asg, &mh[i].mid, &mh[i].fin);
+		i++;
+		jumlah++;
+	}
+	fclose(fp);
+
+}
+
+
+
+void evaluationresult(){
+	// untuk menambahkann nilai asg, mid dan fin 
+	showdata();
+	int n;
+	printf("mhsiswa ke berapa yang ingin di masukan nilai nya: ");
+	scanf("%d", &n);// scan pilihan user untuk menambahkan nilai
+	getchar();
+
+	printf("ASG\t: ");
+	scanf("%d", &mh[n-1].asg);
+	getchar(); // mernambah nilai asg
+
+	printf("MID: ");
+	scanf("%d", &mh[n-1].mid);
+	getchar(); // menambah nilai mid
+
+	printf("FIN\t: ");
+	scanf("%d", &mh[n-1].fin);
+	getchar(); // menambah nilai fin
+
+}
+
+
+
+int main (){
+	// untuk main menu
+	bacafile();
+	int pilihan;
+	do{
+	puts("1. Add student");
+	puts("2. Evaluation result");
+	puts("3. Show data");
+	printf ("4. EXIT\n");
+	printf("Apa yang ingin anda lakukan?\n");
+	scanf("%d", &pilihan);
+	getchar();
+	
+	switch(pilihan){
+		case 1:
+			addstudentinfo();
+			break;
+		case 2:
+			evaluationresult();
+			break;
+		case 3:
+			showdata();
+			getchar();
+			break;
+	}
+	} while (pilihan != 4);
+	addfile();
+   return 0;
+}
